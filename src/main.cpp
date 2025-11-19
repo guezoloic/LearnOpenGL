@@ -1,6 +1,7 @@
-#include "game.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include "stb_image.h"
+
+#include "game.hpp"
 
 int main()
 {
