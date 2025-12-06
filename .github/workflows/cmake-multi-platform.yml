@@ -31,22 +31,13 @@ jobs:
             cpp_compiler: clang++
             build_type: Release
             name: macOS Clang arm64
-
           - os: windows-latest
             arch: x86_64
             c_compiler: cl
             cpp_compiler: cl
             vs_arch: x64
             build_type: Release
-            name: Windows MSVC x64
-
-          - os: ubuntu-latest
-            arch: x86_64
-            c_compiler: gcc
-            cpp_compiler: g++
-            build_type: Release
-            name: Linux GCC x86_64
-            
+            name: Windows MSVC x64            
     steps:
     - uses: actions/checkout@v4
       with:
