@@ -4,18 +4,10 @@
 #include <GLFW/glfw3.h>
 
 Camera::Camera(int width, int height, GLFWwindow* window, float sensitivity)
-    : screenWidth(width),
-      screenHeight(height),
+    : width(width),
+      height(height),
       window(window),
-      cameraYaw(-90.0f),
-      cameraPitch(10.0f),
-      speed(3.0f),
-      cameraSensitivity(sensitivity),
-      fov(45.0f),
-      cameraPosition(0.0f, 0.0f, 0.0f),
-      cameraFront(0.0f, 0.0f, -1.0f),
-      worldUp(0.0f, 1.0f, 0.0f),
-      firstMouse(true)
+      cameraSensitivity(sensitivity)
 {
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   updateCameraVectors();
@@ -28,6 +20,7 @@ void Camera::update(float deltaTime)
   updateCameraVectors();
 }
 
+// TODO: callback management
 void Camera::processInput(float deltaTime)
 {
   float velocity = speed * deltaTime;
@@ -97,7 +90,44 @@ void Camera::updateCameraVectors()
   cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
-glm::mat4 Camera::getViewMatrix()
+glm::mat4 Camera::getViewMatrix() const
 {
   return glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+}
+
+glm::mat4 Camera::getProjectionMatrix() const
+{
+  return glm::perspective(
+      glm::radians(this->fov),
+      static_cast<float>(this->width) / static_cast<float>(this->height), 0.1f,
+      100.0f);
+}
+
+void Camera::setSpeed(float newSpeed)
+{
+  if (newSpeed > 0.0f)
+  {
+    speed = newSpeed;
+  }
+}
+
+void Camera::setCameraSensitivity(float newSensitivity)
+{
+  if (newSensitivity > 0.0f)
+  {
+    cameraSensitivity = newSensitivity;
+  }
+}
+
+void Camera::setFov(float newFov)
+{
+  if (newFov > 1.0f && newFov < 179.0f)
+  {
+    fov = newFov;
+  }
+}
+
+void Camera::setPosition(const glm::vec3& newPosition)
+{
+  cameraPosition = newPosition;
 }
