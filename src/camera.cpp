@@ -1,7 +1,10 @@
 #include "camera.hpp"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
 
 Camera::Camera(int width, int height, GLFWwindow* window, float sensitivity)
     : width(width),
