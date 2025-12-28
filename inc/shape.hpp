@@ -1,31 +1,36 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
 
-#include <stddef.h>
-
-#include <mutex>
-
 #include "camera.hpp"
-#include "glm/fwd.hpp"
+#include "ebo.hpp"
+#include "glm/ext/vector_float3.hpp"
+#include "shader.hpp"
+#include "texture.hpp"
+#include "vao.hpp"
+#include "vbo.hpp"
 
 class Shape
 {
- protected:
-  glm::vec3 position;
-  Camera& cameraRef;
+ private:
+  glm::vec3 pos;
 
-  virtual void init() = 0;
+ protected:
+  Camera &camera;
+
+  VBO vbo;
+  EBO ebo;
+  VAO vao;
+
+  Shader shader;
+  Texture texture;
 
  public:
-  Shape(Camera& cameraRef, glm::vec3 position)
-      : position(position), cameraRef(cameraRef)
-  {
-  }
+  Shape(Camera &camera, glm::vec3 pos, Shader shader, Texture texture);
 
-  glm::vec3 getPosition() const { return position; }
-  Camera& getCamera() const { return cameraRef; }
+  virtual void render(int width, int height) = 0;
 
-  virtual void render() = 0;
+  glm::vec3 getPosition() const { return pos; }
+  void setPosition(glm::vec3 &new_pos) { pos = new_pos; }
 };
 
 #endif
