@@ -58,3 +58,9 @@ constexpr unsigned int INDICE[] = {
   20, 21, 22,   // 11
   22, 23, 20    // 12
 };  
+
+extern unsigned char *__res_render_primitives_cube_frag;
+extern unsigned char *__res_render_primitives_cube_vert;
+
+extern unsigned int __res_render_primitives_cube_frag_len;
+extern unsigned int __res_render_primitives_cube_vert_len;

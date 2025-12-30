@@ -25,7 +25,10 @@ class Shape
   Texture texture;
 
  public:
-  Shape(Camera &camera, glm::vec3 pos, Shader shader, Texture texture);
+  Shape(Camera &camera, glm::vec3 pos, Shader shader, Texture texture)
+      : camera(camera), pos(pos), shader(shader), texture(texture)
+  {
+  }
 
   virtual void render(int width, int height) = 0;
 

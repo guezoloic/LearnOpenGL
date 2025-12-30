@@ -14,7 +14,7 @@ class EBO
   EBO();
   ~EBO();
 
-  void setData(unsigned int* indices, size_t size);
+  void setData(const unsigned int* indices, size_t size);
 
   void bind();
   void unbind();

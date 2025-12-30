@@ -2,7 +2,7 @@
 
 EBO::EBO() : id(0) {}
 
-void EBO::setData(unsigned int* indices, size_t size)
+void EBO::setData(const unsigned int* indices, size_t size)
 {
   if (this->id == 0) glGenBuffers(1, &this->id);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);

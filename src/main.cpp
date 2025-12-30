@@ -6,6 +6,7 @@
 
 #include "camera.hpp"
 #include "cube.hpp"
+#include "glm/ext/vector_float3.hpp"
 
 static void glfwErrorCallback(int error, const char *description)
 {
@@ -59,7 +60,7 @@ int main()
   glfwSwapInterval(1);
 
   Camera camera(width, height, window, 0.1f);
-  Cube cube{camera};
+  Cube cube{camera, glm::vec3 {0.f, 0.f, 0.f}, "stone.png"};
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_MULTISAMPLE);
@@ -79,7 +80,7 @@ int main()
     lastTime = currentTime;
 
     camera.update(deltaTime);
-    cube.loop(width, height);
+    cube.render(width, height);
 
     glfwPollEvents();
     glfwSwapBuffers(window);

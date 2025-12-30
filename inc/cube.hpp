@@ -1,29 +1,15 @@
 #ifndef CUBE_HPP
 #define CUBE_HPP
 
-#include <stddef.h>
-
 #include "camera.hpp"
-#include "ebo.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
-#include "vao.hpp"
-#include "vbo.hpp"
+#include "glm/ext/vector_float3.hpp"
+#include "shape.hpp"
 
-class Cube
+class Cube : public Shape
 {
- private:
-  VBO vbo;
-  EBO ebo;
-  VAO vao;
-
-  Camera &camera;
-  Shader shader;
-  Texture texture;
-
  public:
-  Cube(Camera &camera);
-  void loop(int width, int height);
+  Cube(Camera &camera, glm::vec3 pos, std::string texture);
+  void render(int width, int height) override;
 };
 
 #endif

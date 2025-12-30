@@ -2,7 +2,7 @@
 
 VBO::VBO() : id(0) {}
 
-void VBO::setData(GLfloat* vertices, size_t size)
+void VBO::setData(const GLfloat* vertices, size_t size)
 {
   if (this->id == 0) glGenBuffers(1, &this->id);
   glBindBuffer(GL_ARRAY_BUFFER, this->id);

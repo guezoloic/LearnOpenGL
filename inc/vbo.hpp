@@ -14,7 +14,7 @@ class VBO
   VBO();
   ~VBO();
 
-  void setData(GLfloat* vertices, size_t size);
+  void setData(const GLfloat* vertices, size_t size);
 
   void bind();
   void unbind();
