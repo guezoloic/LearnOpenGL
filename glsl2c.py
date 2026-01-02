@@ -13,7 +13,7 @@ def write_binary(content: str) -> str:
         text += f"0x{byte:02x}, "
         if (i + 1) % line == 0:
             text += "\n"
-    text += "\n"
+    text += "0x00\n"
     return text
 
 def main() -> int:
@@ -31,14 +31,14 @@ def main() -> int:
     dst = Path(sys.argv[2]) if len(sys.argv) == 3 else src.with_suffix(".c")
 
     # variable name
-    varname = f"{src.stem}_{src.suffix[1:]}"
+    varname = f"{src.stem}_{src.suffix[1:]}".upper()
 
     # read binary
     content = src.read_bytes()
 
     with open(dst, "w") as f:
         f.write(f"unsigned char {varname}[] = {{\n{write_binary(content)}}};\n")
-        f.write(f"unsigned int {varname}_len = {len(content)};\n")
+        f.write(f"unsigned int {varname}_LEN = {len(content)};\n")
     return 0
 
 
