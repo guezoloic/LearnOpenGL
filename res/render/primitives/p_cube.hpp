@@ -1,7 +1,7 @@
 #include "GLFW/glfw3.h"
 
 constexpr GLfloat P_CUBE_VERTICE[] = {
-  // Positions           // _LEN;ales           // texture coordinate
+  // Positions           // normales         // texture coordinate
   // front side
   -0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
    0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
@@ -59,8 +59,7 @@ constexpr unsigned int P_CUBE_INDICE[] = {
   22, 23, 20    // 12
 };  
 
-extern const unsigned char P_CUBE_FRAG[];
-extern const unsigned int P_CUBE_FRAG_LEN;
-
-extern const unsigned char P_CUBE_VERT[];
-extern const unsigned int P_CUBE_VERT_LEN;
+extern "C" const unsigned char P_CUBE_FRAG[];
+extern "C" const unsigned int P_CUBE_FRAG_LEN;
+extern "C" const unsigned char P_CUBE_VERT[];
+extern "C" const unsigned int P_CUBE_VERT_LEN;

@@ -36,15 +36,19 @@ foreach(SHADER ${SHADERS})
             ${OUTPUT_C}
     DEPENDS ${SHADER} 
             ${CMAKE_SOURCE_DIR}/glsl2c.py
-    COMMENT "Converting shader ${SHADER} to CPP"
+    COMMENT "Converting shader ${NAME_WE}${EXT} to C file"
     VERBATIM
   )
 
   list(APPEND SHADER_C_FILES ${OUTPUT_C})
 endforeach()
 
+add_custom_target(Shaders ALL DEPENDS ${SHADER_C_FILES})
+
 add_executable(main ${CPP_SOURCES} ${SHADER_C_FILES})
 add_definitions(-g)
+
+add_dependencies(main Shaders)
 
 target_include_directories(main PRIVATE
   inc # project
