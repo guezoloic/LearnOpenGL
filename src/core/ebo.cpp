@@ -1,16 +1,34 @@
-#include "ebo.hpp"
+#include "core/ebo.hpp"
 
-EBO::EBO() : id(0) {}
-
-void EBO::setData(const unsigned int* indices, size_t size)
+core::EBO::EBO(const GLuint* indices, std::size_t size)
 {
-  if (this->id == 0) glGenBuffers(1, &this->id);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
+  // Generate a unique OpenGL buffer handle (ID)
+  glGenBuffers(1, &id);
+
+  // Binding the EBO is mandatory before allocating GPU memory
+  // This makes OpenGL know which buffer we are uploading data to
+  bind();
+
+  // Allocate GPU memory and upload index data to the buffer
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 }
 
-EBO::~EBO() { glDeleteBuffers(1, &this->id); }
+core::EBO::~EBO()
+{
+  // Delete the OpenGL buffer handle and free GPU memory
+  glDeleteBuffers(1, &id);
+}
 
-void EBO::bind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id); }
+void core::EBO::bind()
+{
+  // Bind this buffer to the GL_ELEMENT_ARRAY_BUFFER target
+  // OpenGL will use this buffer for indexed drawing (glDrawElements)
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+}
 
-void EBO::unbind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+void core::EBO::unbind()
+{
+  // Unbind any buffer from GL_ELEMENT_ARRAY_BUFFER
+  // This prevents accidental modification of the previously bound EBO
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
