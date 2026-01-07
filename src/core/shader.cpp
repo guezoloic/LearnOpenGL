@@ -1,86 +1,92 @@
 #include "core/shader.hpp"
 
-#include <iostream>
+#include "core/logger.hpp"
 
-Shader::Shader() : shaderProgramID(0), vertexShaderID(0), fragmentShaderID(0) {}
-
-void Shader::compile(const char* vertexSource, const char* fragmentSource)
+// Compile a shader from its ID and source code
+static void add(GLuint shader, const char* src)
 {
-  if (this->shaderProgramID != 0) glDeleteProgram(this->shaderProgramID);
+  // Attach the source code to the shader object
+  glShaderSource(shader, 1, &src, nullptr);
 
-  this->vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-  this->fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-  this->shaderProgramID = glCreateProgram();
+  // Compile the shader on the GPU
+  glCompileShader(shader);
 
-  this->addVertShader(vertexSource);
-  this->addFragShader(fragmentSource);
-
-  this->compileInProgram();
-}
-
-void Shader::addVertShader(const char* vertexSource)
-{
-  glShaderSource(this->vertexShaderID, 1, &vertexSource, nullptr);
-  glCompileShader(this->vertexShaderID);
-
+  // Check if the compilation was successful
   GLint success;
-  glGetShaderiv(this->vertexShaderID, GL_COMPILE_STATUS, &success);
-  if (!success)
-  {
-    GLchar infoLog[1024];
-    glGetShaderInfoLog(this->vertexShaderID, 1024, nullptr, infoLog);
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+  if (success) return;  // Compilation succeeded, no error
 
-    std::cerr << "ERROR(SHADER): VERTEX COMPILATION FAILED (ID "
-              << this->vertexShaderID << ")\n"
-              << infoLog << std::endl;
-  }
+  // If compilation failed, retrieve the info log from OpenGL
+  GLchar infoLog[1024];
+  glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+
+  // Log the compilation error with shader ID and info
+  core::log::error(
+      std::format("SHADER (ID: {}) compilation failed: {}", shader, infoLog)
+          .c_str());
 }
 
-void Shader::addFragShader(const char* fragmentSource)
+void core::Shader::attach(GLuint vert, GLuint frag)
 {
-  glShaderSource(this->fragmentShaderID, 1, &fragmentSource, nullptr);
-  glCompileShader(this->fragmentShaderID);
+  // Attach the vertex shader to the program
+  glAttachShader(id, vert);
 
+  // Attach the fragment shader to the program
+  glAttachShader(id, frag);
+
+  // Link the program (combine shaders into an executable GPU program)
+  glLinkProgram(id);
+
+  // Check if the linking was successful
   GLint success;
-  glGetShaderiv(this->fragmentShaderID, GL_COMPILE_STATUS, &success);
-  if (!success)
-  {
-    GLchar infoLog[1024];
-    glGetShaderInfoLog(this->fragmentShaderID, 1024, nullptr, infoLog);
+  glGetProgramiv(id, GL_LINK_STATUS, &success);
+  if (success) return;  // Linking succeeded, no error
 
-    std::cerr << "ERROR(SHADER): FRAGMENT COMPILATION FAILED (ID "
-              << this->fragmentShaderID << ")\n"
-              << infoLog << std::endl;
-  }
+  // If linking failed, retrieve the program info log
+  GLchar infoLog[1024];
+  glGetProgramInfoLog(id, 1024, nullptr, infoLog);
+
+  // Log the linking error with program ID and info
+  core::log::error(
+      std::format("SHADER (ID: {}) linking failed: {}", id, infoLog).c_str());
 }
 
-void Shader::compileInProgram()
+void core::Shader::detach(GLuint vert, GLuint frag)
 {
-  glAttachShader(this->shaderProgramID, this->vertexShaderID);
-  glAttachShader(this->shaderProgramID, this->fragmentShaderID);
-  glLinkProgram(this->shaderProgramID);
+  // Detach the vertex shader from the program
+  glDetachShader(id, vert);
 
-  GLint success;
-  glGetProgramiv(this->shaderProgramID, GL_LINK_STATUS, &success);
-  if (!success)
-  {
-    GLchar infoLog[1024];
-    glGetProgramInfoLog(this->shaderProgramID, 1024, nullptr, infoLog);
+  // Detach the fragment shader from the program
+  glDetachShader(id, frag);
 
-    std::cerr << "ERROR(SHADER): LINKING FAILED (Program ID "
-              << this->shaderProgramID << ")\n"
-              << infoLog << std::endl;
-  }
-
-  glDetachShader(this->shaderProgramID, this->vertexShaderID);
-  glDetachShader(this->shaderProgramID, this->fragmentShaderID);
-
-  glDeleteShader(this->vertexShaderID);
-  glDeleteShader(this->fragmentShaderID);
+  // Delete the shader objects from GPU memory
+  // After linking, shaders are no longer needed
+  glDeleteShader(vert);
+  glDeleteShader(frag);
 }
 
-Shader::~Shader() { glDeleteProgram(this->shaderProgramID); }
+core::Shader::Shader(const char* vert, const char* frag)
+{
+  // Create a vertex shader object on the GPU
+  GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 
-void Shader::use() const { glUseProgram(this->shaderProgramID); }
+  // Create a fragment shader object on the GPU
+  GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
 
-GLuint Shader::getShaderProgramID() const { return this->shaderProgramID; }
+  // Create a program object to combine shaders
+  id = glCreateProgram();
+
+  // Compile each shader from source
+  add(vertex, vert);
+  add(fragment, frag);
+
+  // Attach compiled shaders and link the program
+  attach(vertex, fragment);
+
+  // Detach and delete shaders after linking (they are no longer needed)
+  detach(vertex, fragment);
+}
+
+core::Shader::~Shader() { glDeleteProgram(id); }
+
+void core::Shader::use() const { glUseProgram(id); }

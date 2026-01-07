@@ -3,33 +3,33 @@
 
 #include "glad/glad.h"
 
+namespace core
+{
 class Shader
 {
  private:
-  GLuint vertexShaderID;      // vertex shader id
-  GLuint fragmentShaderID;    // fragment shader id
+  GLuint id;  // Shader program ID
 
-  // final compiled shader program id used by the gpu
-  GLuint shaderProgramID;
+  // Attach compiled shaders (vertex & fragment) to the program and link it
+  // Combines the shaders into an executable GPU program
+  void attach(GLuint vert, GLuint frag);
 
-  // compile vertex shader source code
-  void addVertShader(const char* vertexSource);
-  // compile fragment shader source code
-  void addFragShader(const char* fragmentSource);
-  // link both compile vertex and fragment shader
-  void compileInProgram();
+  // Detach and delete compiled shaders from the program
+  // After linking, shaders are no longer needed on the GPU
+  void detach(GLuint vert, GLuint frag);
 
  public:
-  // Does nothing apart initializing all IDs to 0
-  Shader();
-  // compile and link vertex and fragment into the shader struct
-  void compile(const char* vertexSource, const char* fragmentSource);
-  // free shader program
+  // Constructor: takes vertex & fragment shader source code
+  // Compiles shaders, links them into a program, and stores the program ID
+  Shader(const char *vert, const char *frag);
+
+  // Destructor: deletes the program from GPU memory
   ~Shader();
 
-  GLuint getShaderProgramID() const;
-  // activate shader program into gpu pipeline
+  // Activates the shader program for rendering
+  // All subsequent draw calls will use this program
   void use() const;
 };
+}  // namespace core
 
 #endif
