@@ -1,6 +1,5 @@
-#include "camera.hpp"
+#include "core/camera.hpp"
 
-#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
 #include "glm/ext/matrix_transform.hpp"

@@ -1,4 +1,4 @@
-#include "texture.hpp"
+#include "core/texture.hpp"
 
 #include <filesystem>
 #include <iostream>

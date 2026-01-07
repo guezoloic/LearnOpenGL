@@ -76,10 +76,10 @@ constexpr const std::size_t P_CUBE_INDICE_LEN =
 
 extern "C"
 {
-  extern const unsigned char CUBE_VERT[];
-  extern const unsigned int CUBE_VERT_LEN;
-  extern const unsigned char CUBE_FRAG[];
-  extern const unsigned int CUBE_FRAG_LEN;
+  extern const unsigned char P_CUBE_VERT[];
+  extern const unsigned int P_CUBE_VERT_LEN;
+  extern const unsigned char P_CUBE_FRAG[];
+  extern const unsigned int P_CUBE_FRAG_LEN;
 }
 }  // namespace mesh
 

@@ -61,7 +61,7 @@ add_dependencies(main Shaders)
 
 target_include_directories(main PRIVATE
   inc # project
-  res/inc # ressources (primitive)
+  res/render # ressources
   lib/glad/include # glad
   lib/glfw/include # glfw
   lib/glm # glm
