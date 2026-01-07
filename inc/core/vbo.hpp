@@ -1,7 +1,7 @@
 #ifndef VBO_HPP
 #define VBO_HPP
 
-#include <stddef.h>
+#include <cstddef>
 
 #include "glad/glad.h"
 
@@ -18,7 +18,7 @@ class VBO
   // VBO constructor
   // It uploads raw vertex data into GPU memory (VRAM).
   // The interpretation of this data is defined later by the VAO.
-  VBO(const void *data, size_t size);
+  VBO(const void *data, std::size_t size);
 
   // VBO destructor
   // Deletes the GPU buffer when the VBO object goes out of scope. Frees the
